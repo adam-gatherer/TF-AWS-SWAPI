@@ -49,6 +49,7 @@ resource "aws_api_gateway_integration" "tf-swapi-integration" {
     http_method = aws_api_gateway_method.tf-swapi-method.http_method
     type = "HTTP"
     uri = "https://swapi.dev/api/people"
+    integration_http_method = "GET"
     depends_on = [ aws_api_gateway_method.tf-swapi-method ]
 }
 
