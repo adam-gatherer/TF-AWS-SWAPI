@@ -46,7 +46,7 @@ resource "aws_api_gateway_method" "tf-swapi-method" {
 resource "aws_api_gateway_integration" "tf-swapi-integration" {
     rest_api_id = aws_api_gateway_rest_api.tf-swapi.id
     resource_id = aws_api_gateway_resource.tf-swapi-resource.id
-    http_method = aws_api_gateway_method.tf-swapi-method.http_method
+    http_method = "GET"
     type = "HTTP"
     uri = "https://swapi.dev/api/people"
 }
