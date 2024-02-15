@@ -76,7 +76,7 @@ resource "aws_api_gateway_integration" "tf-swapi-people-method-integration" {
   }
   # makes sure tf won't start deploying this resource until the
   # specified resource has already been deployed
-  depends_on = [aws_api_gateway_method.tf-swapi-people-method]
+  #depends_on = [aws_api_gateway_method.tf-swapi-people-method]
 }
 
 /*********************************
@@ -88,7 +88,7 @@ resource "aws_api_gateway_resource" "tf-swapi-people-id-resource" {
   parent_id   = aws_api_gateway_resource.tf-swapi-people-resource.id
   rest_api_id = aws_api_gateway_rest_api.tf-swapi.id
   # "{id}" is a variable so we can request any id we'd like
-  path_part = "{id}"
+  path_part = "path/{id}"
 }
 
 resource "aws_api_gateway_method" "tf-swapi-people-id-method" {
@@ -102,6 +102,29 @@ resource "aws_api_gateway_method" "tf-swapi-people-id-method" {
   request_parameters = {
     "method.request.querystring.format" = true
   }
+}
+
+# The gateway integration is where the API requests are sent
+resource "aws_api_gateway_integration" "tf-swapi-people-id-method-integration" {
+  # ID of our REST API
+  rest_api_id = aws_api_gateway_rest_api.tf-swapi.id
+  # ID of the resource
+  resource_id = aws_api_gateway_resource.tf-swapi-people-id-resource.id
+  # The HTTP method used 
+  http_method = aws_api_gateway_method.tf-swapi-people-id-method.http_method
+  # the type of integration we're using
+  type = "HTTP"
+  # URI to which the requests are sent
+  uri = "https://swapi.dev/api/people/{id}"
+  # the type of method used when sending the request
+  integration_http_method = "GET"
+  # configuring the integration request query strings
+  request_parameters = {
+    "integration.request.querystring.search" = "method.request.querystring.format"
+  }
+  # makes sure tf won't start deploying this resource until the
+  # specified resource has already been deployed
+  #depends_on = [aws_api_gateway_method.tf-swapi-people-id-method]
 }
 
 
